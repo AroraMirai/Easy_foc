@@ -6,42 +6,6 @@
  */
 #include "ADC_get.h"
 
-
-//adc16_channel_config_t ADC0_channelsConfig[3] = {
-//		{
-//				.channelNumber = 2U,
-//				.enableDifferentialConversion = false,
-//				.enableInterruptOnConversionCompleted = false,
-//		},
-//
-//		{
-//				.channelNumber = 5U,
-//				.enableDifferentialConversion = false,
-//				.enableInterruptOnConversionCompleted = false,
-//		},
-//
-//		{
-//				.channelNumber = 6U,
-//				.enableDifferentialConversion = false,
-//				.enableInterruptOnConversionCompleted = false,
-//		}
-//};
-//const adc16_config_t ADC0_config = {
-//		.referenceVoltageSource = kADC16_ReferenceVoltageSourceVref,
-//		.clockSource =  kADC16_ClockSourceAlt0,
-//		.enableAsynchronousClock = true,
-//		.clockDivider = kADC16_ClockDivider2,
-//		.resolution = kADC16_ResolutionSE12Bit,
-//		.longSampleMode = kADC16_LongSampleDisabled,
-//		.enableHighSpeed = true,
-//		.enableLowPower = false,
-//		.enableContinuousConversion = false
-//};
-//
-//const adc16_channel_mux_mode_t ADC0_muxMode = kADC16_ChannelMuxA;
-//const adc16_hardware_average_mode_t ADC0_hardwareAverageMode = kADC16_HardwareAverageDisabled;
-
-
 ADCresult_t adcGet_struct;
 
 void adc_struct_Init(ADCresult_t *p) {
@@ -53,24 +17,6 @@ void adc_struct_Init(ADCresult_t *p) {
 	p->Ib_standard = 0;
 }
 
-
-/*
- * @brief ADC initialize
- *
- * @param
- *
- * @return void
- */
-//void ADC0_init(void) {
-//
-//	ADC16_Init(ADC0_PERIPHERAL, &ADC0_config);								//ADC基本配置
-//
-//	ADC16_EnableHardwareTrigger(ADC0_PERIPHERAL, false);					//取消ADC硬件触发使能
-//
-//	ADC16_SetHardwareAverage(ADC0_PERIPHERAL, ADC0_hardwareAverageMode);	//
-//
-//	ADC16_SetChannelMuxMode(ADC0_PERIPHERAL, ADC0_muxMode);
-//}
 /*
  * @brief ADC channel initialize
  *
