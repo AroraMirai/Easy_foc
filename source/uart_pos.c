@@ -36,28 +36,16 @@ void speed_t_Init(speed_Calu_t *p)
 	p->omega_m = 0;
 }
 
-void uart_Read(pos_Get_t *p)
+uint32_t uart_Read(pos_Get_t *p)
 {
-	GPIO_PinWrite(BOARD_INITPINS_CODE_ORDER_GPIO, BOARD_INITPINS_CODE_ORDER_PIN, 1);
-
-	UART_WriteBlocking(UART1_PERIPHERAL, txbuff_t, sizeof(txbuff_t) / sizeof(txbuff_t[0]));
-
-	GPIO_PinWrite(BOARD_INITPINS_CODE_ORDER_GPIO, BOARD_INITPINS_CODE_ORDER_PIN, 0);
-
-	UART_ReadBlocking(UART1_PERIPHERAL, p->transbuff_t, sizeof(p->transbuff_t) / sizeof(p->transbuff_t[0]));
+	return Uart_ReadCode();
 }
 
 void pos_Calu(pos_Get_t *p)
 {
 	uint32_t pos_code_l, pos_code_m, pos_code_h, pos_code = 0;
 
-	if (p->transbuff_t[0] == 0x1A && p->transbuff_t[1] == 0x0)
-	{
-		pos_code_l = p->transbuff_t[2];
-		pos_code_m = p->transbuff_t[3];
-		pos_code_h = p->transbuff_t[4];
-		pos_code = pos_code_l + (pos_code_m << 8) + (pos_code_h << 16);
-	}
+	pos_code = uart_Read();
 
 	uint32_t test_pos_code = pos_code * 4096 * 5 / 131072;
 	p->motor_Pos = (((test_pos_code & 0xfff) - 2051) & 0xfff);
