@@ -12,7 +12,7 @@
 typedef struct _pos
 {
 	uint8_t transbuff_t[11];
-	uint32_t motor_Pos;
+	double motor_Pos;
 	double theta;
 	double theta_e;
 	volatile double pos_prev;
