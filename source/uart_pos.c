@@ -47,6 +47,10 @@ void uart_Read(pos_Get_t *p)
 	UART_ReadBlocking(UART1_PERIPHERAL, p->transbuff_t, sizeof(p->transbuff_t) / sizeof(p->transbuff_t[0]));
 }
 
+/*
+ * @brief	根据编码器值得到电机位置信息
+ */
+
 void pos_Calu(pos_Get_t *p)
 {
 	uint32_t pos_code_l, pos_code_m, pos_code_h, pos_code = 0;
@@ -82,15 +86,30 @@ void speed_Calu(pos_Get_t *p, speed_Calu_t *s, bool ftmIrqFlag)
 {
 	if (true == ftmIrqFlag)
 	{
-		s->delta_Pos = p->pos_last - p->pos_prev;
-		if (s->delta_Pos < 0)
+		//反向运行
+		if (p->pos_last < p->pos_prev)
 		{
-			s->delta_Pos = (p->pos_last + 360) - p->pos_prev;
+			s->delta_Pos = - p->pos_last + p->pos_prev;
+			if (s->delta_Pos < 0)
+			{
+				s->delta_Pos = (p->pos_prev + 360) - p->pos_last;
+			}
 		}
+
+		//正向运行
+		if (p->pos_last >= p->pos_prev)
+		{
+			s->delta_Pos = p->pos_last - p->pos_prev;
+			if (s->delta_Pos < 0)
+			{
+				s->delta_Pos = (p->pos_last + 360) - p->pos_prev;
+			}
+		}
+
 		ftmIrqFlag = false;
 	}
 
 	s->omega_m = s->delta_Pos / s->T_speed;				//omega_m的单位为rad/s
-
-	s->Nr = s->omega_m / 360;									//Nr的单位为r/s
+	double circle = 2 * PI;
+	s->Nr = s->omega_m / circle;								//Nr的单位为r/s
 }
