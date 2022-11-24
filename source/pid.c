@@ -56,7 +56,7 @@ double pid_realize(PI_CONTROL_t *pid)
 			pid->Out = pid->OutMin;
 	return pid->Out;
 }
-
+//TODO:其中的PID参数并不合理，整合速度超级慢
 
 void N_Loop (double *output , PI_CONTROL_t *p)
 {
