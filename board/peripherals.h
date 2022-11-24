@@ -26,7 +26,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM3_PERIPHERAL FTM3
 /* Definition of the clock source frequency */
-#define FTM3_CLOCK_SOURCE 47988736UL
+#define FTM3_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
 /* Definition of the clock source frequency */
 #define FTM3_TIMER_MODULO_VALUE 99
 /* Definition of peripheral ID */
@@ -36,9 +36,9 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM0_PERIPHERAL FTM0
 /* Definition of the clock source frequency */
-#define FTM0_CLOCK_SOURCE 47988736UL
+#define FTM0_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
 /* Definition of the clock source frequency */
-#define FTM0_TIMER_MODULO_VALUE 2998
+#define FTM0_TIMER_MODULO_VALUE (((FTM0_CLOCK_SOURCE/ (1U << (FTM0_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 500) - 1)
 /* FTM0 interrupt vector ID (number). */
 #define FTM0_IRQN FTM0_IRQn
 /* FTM0 interrupt handler identifier. */
