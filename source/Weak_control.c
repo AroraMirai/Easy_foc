@@ -35,7 +35,6 @@ void MTPA_loop(MTPA_Loop_t *p , double Iq_ref)
  */
 void weak_loop_preAngel(weaken_Loop_t *p,double Iq_ref)
 {
-	double Id_comp;
 	double weak_preAngel;
 
 	p->Udc_max = adcGet_struct.Udc * 0.8 / SQRT3;
