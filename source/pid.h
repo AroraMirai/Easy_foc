@@ -9,7 +9,7 @@
 #define PID_H_
 
 #define DEAD_ZONE 0 			/*死区*/
-#define INTEGRAL_ERR_ZONE 80	/*积分分离时对应的误差范围*/
+#define INTEGRAL_ERR_ZONE 20	/*积分分离时对应的误差范围*/
 #define INTEGRAL_MAX_VAL 2000   	/*积分范围限定，防止积分饱和*/
 #define LIMIT_MIN_MAX(X,min,max) (x) = (((x)<=(min)) ? (min) :(((x) >= (max))? (max) : (x)))
 
