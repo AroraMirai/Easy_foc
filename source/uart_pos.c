@@ -38,7 +38,7 @@ void speed_t_Init(speed_Calu_t *p)
 
 uint32_t uart_Read(pos_Get_t *p)
 {
-	return Uart_ReadCode();
+	return Uart_ReadCode();				//通过通讯协议获悉编码器值，并获取位置
 }
 
 void pos_Calu(pos_Get_t *p)
