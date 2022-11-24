@@ -30,8 +30,8 @@ void MTPA_loop(MTPA_Loop_t *p , double Iq_ref)
 
 /*
  * @brief	超前角弱磁方法
- * @param	p 弱磁控制结构体 其中包含了
- * @param
+ * @param	p 弱磁控制结构体 其中包含了电机的现在状态：Us，Is
+ * @param       输出电机弱磁运行所需要的给定dq轴电流
  */
 void weak_loop_preAngel(weaken_Loop_t *p,double Iq_ref)
 {
