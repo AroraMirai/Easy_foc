@@ -26,7 +26,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM3_PERIPHERAL FTM3
 /* Definition of the clock source frequency */
-#define FTM3_CLOCK_SOURCE 47988736UL //CLOCK_GetFreq(kCLOCK_BusClk) 此处用getfreq函数就会出现问题，导致速度计算出现问题 不知道为什么
+#define FTM3_CLOCK_SOURCE 47988736UL //CLOCK_GetFreq(kCLOCK_BusClk) 此处用getfreq函数就会导致中断速度计算出现问题 不知道为什么
 /* Definition of the clock source frequency */
 #define FTM3_TIMER_MODULO_VALUE 99
 /* Definition of peripheral ID */
