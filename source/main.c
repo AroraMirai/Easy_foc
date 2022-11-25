@@ -1,5 +1,5 @@
 /**
- * @file    MVK56second.c
+ * @file    main.c
  * @brief   Application entry point.
  */
 #include "fsl_common.h"
