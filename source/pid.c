@@ -7,17 +7,17 @@
 
 #include "pid.h"
 
-PI_CONTROL_t N_PI;
-PI_CONTROL_t Id_PI;
-PI_CONTROL_t Iq_PI;
-PI_CONTROL_t Theta_PI;
-PI_CONTROL_t weak_PI;
+PI_CONTROL_t N_PI=PI_CONTROL_DEFAULTS;
+PI_CONTROL_t Id_PI=PI_CONTROL_DEFAULTS;
+PI_CONTROL_t Iq_PI=PI_CONTROL_DEFAULTS;
+PI_CONTROL_t Theta_PI=PI_CONTROL_DEFAULTS;
+PI_CONTROL_t weak_PI=PI_CONTROL_DEFAULTS;
 
 
 double pid_realize(PI_CONTROL_t *pid)
 {
 	/*计算目标值与实际值的误差*/
-	pid->cError = (pid->Inref - pid->InMeas) / 50;
+	pid->cError = (pid->Inref - pid->InMeas) / 100;
 
 	/* 设定闭环死区 */
 //	if ((pid->cError >= -DEAD_ZONE) && (pid->cError <= DEAD_ZONE))
@@ -62,18 +62,18 @@ void N_Loop (double *output , PI_CONTROL_t *p)
 {
 
 	p->Kp = 0.01;
-	p->Ki = 0.05;
+	p->Ki = 0.2;
 	p->Kd = 0.02;
-	p->OutMax = 800;
-	p->OutMin = -800;
+	p->OutMax = 100;
+	p->OutMin = -100;
 	*output = pid_realize(p);
 }
 
 void Iq_Loop (double *output , PI_CONTROL_t *p)
 {
 
-	p->Kp = 0.01;
-	p->Ki = 0.02;
+	p->Kp = 0.02;
+	p->Ki = 0.05;
 	p->Kd = 0;
 	p->OutMax = 24;
 	p->OutMin = -24;
@@ -83,7 +83,7 @@ void Iq_Loop (double *output , PI_CONTROL_t *p)
 void Id_Loop (double *output , PI_CONTROL_t *p)
 {
 
-	p->Kp = 0.01;
+	p->Kp = 0.2;
 	p->Ki = 0.05;
 	p->Kd = 0;
 	p->OutMax = 24;
