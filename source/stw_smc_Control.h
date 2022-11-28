@@ -28,6 +28,7 @@ typedef struct _STW_SMC
 	double sError;
 	double sError_last;
 	double Ki_sum;
+	double Kp_sum;
 
 }STW_SMC_t;
 
@@ -41,6 +42,7 @@ void STW_SMC_Calu(STW_SMC_t *p);
 
 void Iq_stw_Loop(double *output ,STW_SMC_t *p);
 void Id_stw_Loop(double *output ,STW_SMC_t *p);
+void Nr_stw_Loop(double *output ,STW_SMC_t *p);
 
 
 void STW_SMC_Loop(double *output, STW_SMC_t *p, int Select_Flag);
