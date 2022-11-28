@@ -14,9 +14,9 @@
 
 /*
  * ================================LIMIT_MIN_MAX(X)===============================
- * 									|	max	,	x > max
- * 					f(x,min,max) = 	{	x	,	min < x < max
- * 									|	min	,	x < min
+ * 					|	max	,	x > max
+ * 			f(x,min,max) = 	{	x	,	min < x < max
+ * 					|	min	,	x < min
  * ===============================================================================
  */
 #define LIMIT_MIN_MAX(x,min,max) (x) = (((x)<=(min)) ? (min) :(((x) >= (max))? (max) : (x)))
@@ -44,6 +44,9 @@ typedef struct {
 	double InMeas;				//Input measure
 	double Out;					//PID out
 } PI_CONTROL_t;
+
+#define PI_CONTROL_DEFAULTS  \
+	{0,0,0,0,0,0,0,0,0,0,0,0}
 
 extern PI_CONTROL_t N_PI;
 extern PI_CONTROL_t Id_PI;
