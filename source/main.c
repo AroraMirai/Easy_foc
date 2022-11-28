@@ -1,5 +1,5 @@
 /**
- * @file    main.c
+ * @file    MVK56second.c
  * @brief   Application entry point.
  */
 #include "fsl_common.h"
@@ -20,7 +20,7 @@
 /* Control Input init */
 
 /* 前馈的给定参考值 */
-#define N_TARGET 200
+#define N_TARGET 100
 /*======================flag======================*/
 volatile bool ftmIrqFlag = false;
 volatile int test1 = 0;
@@ -34,6 +34,8 @@ void FTM0_IRQHandler()
 	uart_Read(&posGet_struct);									//通过UART读取编码器值
 	pos_Calu(&posGet_struct);									//通过读取的编码器值计算电机的机械角度和电角度
 	test1++;
+  	adc_Udc_result(&adcGet_struct);							//通过ADC采集直流电压
+	adc_Iuvw_result(&adcGet_struct);						//通过ADC采集uv相电流值
 	FTM_ClearStatusFlags(FTM0, kFTM_TimeOverflowFlag);
 	__DSB();
 }
@@ -66,18 +68,15 @@ void main(void)
 		Udq_to_AlphaBeta.Theta_e = posGet_struct.theta_e;		//将电角度传给电压电流计算结构体
 		IAlphaBeta_to_dq.Theta_e = posGet_struct.theta_e;
 
-		N_PI.InMeas = speed_struct.Nr;
-		N_PI.Inref = N_TARGET;
-		N_Loop(&Iq_PI.Inref, &N_PI);							//转速PI控制模块，通过给定转速与实际转速的比得到数值
+//		N_PI.InMeas = speed_struct.Nr;
+//		N_PI.Inref = N_TARGET;
+//		PID_Calu(&Iq_PI.Inref, &N_PI, Nr_Select_Flag);			//转速PI控制模块，通过给定转速与实际转速的比得到数值
 
-//		N_Loop(&stw_smc_struct.In_ref, &N_PI);
-//		test2++;
-//		if ( test2 == 1 || test2 % 5000 == 0)
-//		{
-//			adc_add_standard(&adcGet_struct);
-//		}
-	  	adc_Udc_result(&adcGet_struct);							//通过ADC采集直流电压
-		adc_Iuvw_result(&adcGet_struct);						//通过ADC采集uv相电流值
+		N_STW.In_meas = speed_struct.Nr;
+		N_STW.In_ref = N_TARGET;
+		STW_SMC_Loop(&Iq_PI.Inref, &N_STW, Nr_Select_Flag);
+
+
 
 		IAlphaBeta_to_dq.As = adcGet_struct.Ia;
 		IAlphaBeta_to_dq.Bs = adcGet_struct.Ib;
@@ -87,21 +86,22 @@ void main(void)
 		park_Transf(&IAlphaBeta_to_dq);
 /*--------------------------------------------------------------------------------
  * --------------------------------Iq  PID	Loop----------------------------------
- *-------------------------------------------------------------------------------
+ *--------------------------------------------------------------------------------
  */
 		Iq_PI.InMeas = - IAlphaBeta_to_dq.Qs;
 		PID_Calu(&Udq_to_AlphaBeta.Qs,&Iq_PI, Iq_Select_Flag);
-//		stw_smc_struct.In_meas = -IAlphaBeta_to_dq.Qs;
-//		stw_smc_struct.In_ref = Iq_PI.Inref;
-//		STW_SMC_Loop(&Udq_to_AlphaBeta.Qs, &stw_smc_struct, Iq_Select_Flag);
+//		Iq_STW.In_meas = -IAlphaBeta_to_dq.Qs;
+//		Iq_STW.In_ref = Iq_PI.Inref;
+//		STW_SMC_Loop(&Udq_to_AlphaBeta.Qs, &Iq_STW, Iq_Select_Flag);
 
-/*--------------------------------------------------------------------------------
- * --------------------------------Id  PID	Loop----------------------------------
- * -------------------------------------------------------------------------------
+/*---------------------------------------------------------------------------------
+ * --------------------------------Id  PID	Loop-----------------------------------
+ * --------------------------------------------------------------------------------
  */
-		Id_PI.InMeas = - IAlphaBeta_to_dq.Ds;
-		Id_PI.Inref = 0;
-		PID_Calu(&Udq_to_AlphaBeta.Ds, &Id_PI, Id_Select_Flag);
+		Id_STW.In_meas = - IAlphaBeta_to_dq.Ds;
+		Id_STW.In_ref = 0;
+		STW_SMC_Loop(&Udq_to_AlphaBeta.Ds, &Id_STW, Id_Select_Flag);
+//		PID_Calu(&Udq_to_AlphaBeta.Ds, &Id_PI, Id_Select_Flag);
 //		Udq_to_AlphaBeta.Qs = 3;
 
 		ipark_Transf(&Udq_to_AlphaBeta);						//反PARK变换
