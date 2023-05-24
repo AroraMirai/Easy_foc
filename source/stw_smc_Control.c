@@ -20,7 +20,7 @@ STW_SMC_t N_STW;
  * ============================================================================
  */
 
-double sign_Fn(double input)
+inline static double sign_Fn(double input)
 {
 	if (input > 0)
 	{
