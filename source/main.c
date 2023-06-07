@@ -39,31 +39,9 @@ void FTM0_IRQHandler()
 	FTM_ClearStatusFlags(FTM0, kFTM_TimeOverflowFlag);
 	__DSB();
 }
-
-/*
- * @brief   Application entry point.
- */
-void main(void)
+void FTM1_IRQHandler()
 {
-	/* Init board hardware. */
-	BOARD_InitBootPins();
-	BOARD_InitBootClocks();
-	BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-	/* Init FSL debug console. */
-	BOARD_InitDebugConsole();
-#endif
-
-//	ADC0_init();
-	pos_t_Init(&posGet_struct);
-	speed_t_Init(&speed_struct);
-	PARK_CLARKE_Init(&IAlphaBeta_to_dq);
-	PARK_CLARKE_Init(&Udq_to_AlphaBeta);
-	adc_struct_Init(&adcGet_struct);
-
-	while (1)
-	{
-		speed_Calu(&posGet_struct, &speed_struct, ftmIrqFlag);	//通过中断计算转速
+speed_Calu(&posGet_struct, &speed_struct, ftmIrqFlag);	//通过中断计算转速
 
 		Udq_to_AlphaBeta.Theta_e = posGet_struct.theta_e;		//将电角度传给电压电流计算结构体
 		IAlphaBeta_to_dq.Theta_e = posGet_struct.theta_e;
@@ -110,6 +88,33 @@ void main(void)
 		svpwm_calc_t(&svpwm_struct);							//PI输出的电压进入前馈环进入SVPWM部分
 
 		updata_PWM(&svpwm_struct);								//更新FTM的PWM输出占空比
+	__DSB();
+}
+
+/*
+ * @brief   Application entry point.
+ */
+void main(void)
+{
+	/* Init board hardware. */
+	BOARD_InitBootPins();
+	BOARD_InitBootClocks();
+	BOARD_InitBootPeripherals();
+#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
+	/* Init FSL debug console. */
+	BOARD_InitDebugConsole();
+#endif
+
+//	ADC0_init();
+	pos_t_Init(&posGet_struct);
+	speed_t_Init(&speed_struct);
+	PARK_CLARKE_Init(&IAlphaBeta_to_dq);
+	PARK_CLARKE_Init(&Udq_to_AlphaBeta);
+	adc_struct_Init(&adcGet_struct);
+
+	while (1)
+	{
+		
 	}
 }
 
