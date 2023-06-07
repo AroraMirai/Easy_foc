@@ -26,7 +26,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM3_PERIPHERAL FTM3
 /* Definition of the clock source frequency */
-#define FTM3_CLOCK_SOURCE 47988736UL //CLOCK_GetFreq(kCLOCK_BusClk) 此处用getfreq函数就会导致中断速度计算出现问题 不知道为什么
+#define FTM3_CLOCK_SOURCE 47988736UL
 /* Definition of the clock source frequency */
 #define FTM3_TIMER_MODULO_VALUE 99
 /* Definition of peripheral ID */
@@ -36,9 +36,9 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM0_PERIPHERAL FTM0
 /* Definition of the clock source frequency */
-#define FTM0_CLOCK_SOURCE 47988736UL //CLOCK_GetFreq(kCLOCK_BusClk) 此处用getfreq函数就会出现问题，导致速度计算出现问题 不知道为什么
+#define FTM0_CLOCK_SOURCE 47988736UL
 /* Definition of the clock source frequency */
-#define FTM0_TIMER_MODULO_VALUE (((FTM0_CLOCK_SOURCE/ (1U << (FTM0_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 500) - 1)
+#define FTM0_TIMER_MODULO_VALUE 2998
 /* FTM0 interrupt vector ID (number). */
 #define FTM0_IRQN FTM0_IRQn
 /* FTM0 interrupt handler identifier. */
@@ -55,6 +55,16 @@ extern "C" {
 #define ADC0_CH1_CONTROL_GROUP 0
 /* Channel 2 (SE.6a) conversion control group. */
 #define ADC0_CH2_CONTROL_GROUP 0
+/* Definition of peripheral ID */
+#define FTM1_PERIPHERAL FTM1
+/* Definition of the clock source frequency */
+#define FTM0_CLOCK_SOURCE 47988736UL
+/* Definition of the clock source frequency */
+#define FTM0_TIMER_MODULO_VALUE 1070
+/* FTM0 interrupt vector ID (number). */
+#define FTM0_IRQN FTM0_IRQn
+/* FTM0 interrupt handler identifier. */
+#define FTM0_IRQHANDLER FTM0_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
@@ -66,6 +76,7 @@ extern adc16_channel_config_t ADC0_channelsConfig[3];
 extern const adc16_config_t ADC0_config;
 extern const adc16_channel_mux_mode_t ADC0_muxMode;
 extern const adc16_hardware_average_mode_t ADC0_hardwareAverageMode;
+extern const ftm_config_t FTM1_config;
 
 /***********************************************************************************************************************
  * Initialization functions
