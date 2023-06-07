@@ -58,13 +58,13 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM1_PERIPHERAL FTM1
 /* Definition of the clock source frequency */
-#define FTM0_CLOCK_SOURCE 47988736UL
+#define FTM1_CLOCK_SOURCE 47988736UL
 /* Definition of the clock source frequency */
-#define FTM0_TIMER_MODULO_VALUE 1070
+#define FTM1_TIMER_MODULO_VALUE 1070
 /* FTM0 interrupt vector ID (number). */
-#define FTM0_IRQN FTM0_IRQn
+#define FTM1_IRQN FTM1_IRQn
 /* FTM0 interrupt handler identifier. */
-#define FTM0_IRQHANDLER FTM0_IRQHandler
+#define FTM1_IRQHANDLER FTM1_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
