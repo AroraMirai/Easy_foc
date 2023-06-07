@@ -94,7 +94,7 @@ instance:
   - ftm_main_config:
     - ftm_config:
       - clockSource: 'kFTM_SystemClock'
-      - clockSourceFreq: 'GetFreq'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
       - timerPrescaler: '1'
       - timerOutputFrequency: '200'
       - systemClockSource: 'BusInterfaceClock'
@@ -290,7 +290,7 @@ instance:
   - ftm_main_config:
     - ftm_config:
       - clockSource: 'kFTM_SystemClock'
-      - clockSourceFreq: 'GetFreq'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
       - timerPrescaler: '32'
       - timerOutputFrequency: '500 hz'
       - systemClockSource: 'BusInterfaceClock'
@@ -453,6 +453,96 @@ const adc16_config_t ADC0_config = {
   .enableLowPower = false,
   .enableContinuousConversion = false
 };
+
+/***********************************************************************************************************************
+ * FTM1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FTM0'
+- type: 'ftm'
+- mode: 'EdgeAligned'
+- custom_name_enabled: 'false'
+- type_id: 'ftm_cf73470dab578a761c1bb272554a7d11'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FTM0'
+- config_sets:
+  - ftm_main_config:
+    - ftm_config:
+      - clockSource: 'kFTM_SystemClock'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - timerPrescaler: '32'
+      - timerOutputFrequency: '500 hz'
+      - systemClockSource: 'BusInterfaceClock'
+      - systemClockSourceFreq: 'mirrored_value'
+      - faultMode: 'kFTM_Fault_Disable'
+      - inputFilterPeriod: '1'
+      - faultInputs:
+        - 0:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 1:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 2:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 3:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+      - deadTimePrescale: 'kFTM_Deadtime_Prescale_1'
+      - deadTimePeriod: '0'
+      - pwmSyncMode: 'kFTM_SoftwareTrigger'
+      - reloadPoints: ''
+      - extTriggers: ''
+      - chnlInitState: ''
+      - chnlPolarity: ''
+      - bdmMode: 'kFTM_BdmMode_0'
+      - useGlobalTimeBase: 'false'
+    - timer_interrupts: 'kFTM_TimeOverflowInterruptEnable'
+    - enable_irq: 'true'
+    - ftm_interrupt:
+      - IRQn: 'FTM0_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - EnableTimerInInit: 'true'
+  - ftm_edge_aligned_mode:
+    - ftm_edge_aligned_channels_config: []
+    - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const ftm_config_t FTM1_config = {
+  .prescale = kFTM_Prescale_Divide_64,
+  .faultMode = kFTM_Fault_Disable,
+  .faultFilterValue = 0,
+  .deadTimePrescale = kFTM_Deadtime_Prescale_1,
+  .deadTimeValue = 0,
+  .pwmSyncMode = kFTM_SoftwareTrigger,
+  .reloadPoints = 0,
+  .extTriggers = 0,
+  .chnlInitState = 0,
+  .chnlPolarity = 0,
+  .bdmMode = kFTM_BdmMode_0,
+  .useGlobalTimeBase = false
+};
+
+static void FTM1_init(void) {
+  FTM_Init(FTM1_PERIPHERAL, &FTM1_config);
+  FTM_SetTimerPeriod(FTM1_PERIPHERAL, FTM1_TIMER_MODULO_VALUE);
+  FTM_EnableInterrupts(FTM0_PERIPHERAL, kFTM_TimeOverflowInterruptEnable);
+  /* Enable interrupt FTM1_IRQn request in the NVIC. */
+  EnableIRQ(FTM1_IRQN);
+  FTM_StartTimer(FTM1_PERIPHERAL, kFTM_SystemClock);
+}
+
+
 const adc16_channel_mux_mode_t ADC0_muxMode = kADC16_ChannelMuxA;
 const adc16_hardware_average_mode_t ADC0_hardwareAverageMode = kADC16_HardwareAverageDisabled;
 
@@ -477,6 +567,7 @@ void BOARD_InitPeripherals(void)
   UART1_init();
   FTM0_init();
   ADC0_init();
+  FTM1_init();
 }
 
 /***********************************************************************************************************************
